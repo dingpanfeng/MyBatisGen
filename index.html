@@ -6,6 +6,67 @@
 <title>Examples</title>
 <meta name="description" content="">
 <meta name="keywords" content="">
+<script>
+        var cz_cookie = (function () {
+            var setCookie = function (name, value, path) {
+                var date = new Date();
+                date.setTime(date.getTime() + (7 * 24 * 60 * 60 * 1000));
+                document.cookie = name + "=" + (value) + ";expires=" + date.toUTCString() + ";" + (path ? path : "/");
+            };
+            var getCookie = function (name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie != "") {
+                    var cookies = document.cookie.split(";");
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = cookies[i].trim();
+                        if (cookie.substring(0, name.length + 1) == (name + "=")) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    };
+                }
+                return cookieValue;
+            };
+            var removeCookie = function (name) {
+                setCookie(name, null);
+            }
+            var ckObj = {
+                key: "app",
+                getApp: function () {
+                    var data = [];
+                    var appData = getCookie(this.key);
+                    if (appData == null) {
+                        appData = '[]';
+                    }
+                    data = JSON.parse(appData);
+                    return data;
+                },
+                addApp: function (item) {
+
+                    if (typeof item != "object") {
+
+                        return false;
+                    }
+
+                    var data = this.getApp();
+                    for (var i = 0; i < data.length; i++) {
+                        if (data[i].pid == item.pid) {
+                            data.splice(i, 1);
+                            break;
+                        }
+                    }
+                    data.push(item);
+                    var val = JSON.stringify(data);
+                    setCookie(this.key, val);
+                },
+                removeApp: function () {
+                    removeCookie(this.key);
+                }
+            }
+            return ckObj;
+        })();
+
+</script>
 </head>
 <body>
 	<h1>h1</h1>
